@@ -25,7 +25,7 @@ void displayNumber(int cnt);
 
 volatile uint8_t timerCounter0 = 0;
 volatile unsigned int counter= 0 ;
-uint8_t distance;
+volatile uint8_t distance;
 char buff[20];
 
 ISR(TIMER0_OVF_vect){
@@ -61,6 +61,7 @@ void TimerInterruptInit(void)
 {
 	TCCR0 |= (1 << CS02);
 	TIMSK |= (1 << TOIE0);
+	sei();
 }
 void Timer_init(void){
 	// 16비트 타이머 1번 타이머/카운터 분주비를 1024로 설정
@@ -111,7 +112,7 @@ int main(void)
 	I2C_LCD_init();
 	Timer_init();			// 1번 타이머/카운터 활성화
 	TimerInterruptInit();
-	sei();
+	
 	
     while (1) 
     {
@@ -121,7 +122,7 @@ int main(void)
 		sprintf(buff,"Distance:%03d cm", distance);
 		I2C_LCD_write_string_XY(1,0,buff);
 		
-		_delay_ms(500);
+		_delay_ms(1000);
 		
 		counter = distance;
 	
